@@ -1,15 +1,20 @@
-# .gitignore に以下を追加
+# 仮想環境やキャッシュ
 venv/
 __pycache__/
 *.pyc
-*.pkl
+*.pyo
+
+# 環境変数や秘密鍵
+.env
+
+# 重いファイル・出力物
 *.log
-*.DS_Store
-*.sqlite3
-*.env
-node_modules/
 *.zip
 *.tar.gz
+*.sqlite3
 *.jpg
 *.png
 *.pdf
+*.mp4
+*.ckpt
+*.pt

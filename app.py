@@ -39,7 +39,7 @@ def result():
     prompt = generate_prompt(name, birthdate, question)
 
     response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "あなたはプロの占い師です。"},
             {"role": "user", "content": prompt},

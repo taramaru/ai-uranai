@@ -4,6 +4,24 @@ load_dotenv()
 from flask import Flask, render_template, request
 import openai
 import os
+import stripe
+
+# Stripe初期化
+stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
+
+@app.route("/buy", methods=["POST"])
+def buy():
+    checkout_session = stripe.checkout.Session.create(
+        payment_method_types=["card"],
+        line_items=[{
+            "price": os.environ.get("STRIPE_PRICE_ID"),
+            "quantity": 1,
+        }],
+        mode="payment",
+        success_url=request.host_url + "premium_result",
+        cancel_url=request.host_url + "result",
+    )
+    return redirect(checkout_session.url, code=303)
 
 app = Flask(__name__)
 

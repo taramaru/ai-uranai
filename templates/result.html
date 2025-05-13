@@ -2,45 +2,83 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>占い結果</title>
   <style>
     body {
       font-family: sans-serif;
-      background: #f5f5f5;
-      padding: 40px;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
       max-width: 800px;
       margin: auto;
     }
+
     h2 {
       text-align: center;
       color: #4a4a4a;
+      font-size: 1.5em;
     }
+
     .result-box {
-      background: white;
+      background: #fff;
       padding: 20px;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       white-space: pre-wrap;
       line-height: 1.6;
+      margin-bottom: 30px;
     }
-    .back {
+
+    .buy-button {
       display: block;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+      padding: 15px 20px;
+      background: linear-gradient(135deg, #ff9800, #ff5722);
+      color: white;
+      font-size: 1.2em;
+      font-weight: bold;
       text-align: center;
-      margin-top: 20px;
       text-decoration: none;
-      color: #4CAF50;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .back:hover {
-      text-decoration: underline;
+
+    .buy-button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.2em;
+      }
+
+      .buy-button {
+        font-size: 1em;
+        padding: 12px;
+      }
     }
   </style>
 </head>
 <body>
-  <h2>🔮 あなたの占い結果</h2>
-  <div class="result-box">{{ result }}</div>
+  <h2>🔮 あなたの無料鑑定結果</h2>
+
+  <div class="result-box">
+    {{ result }}
+  </div>
+
   <form action="/buy" method="post">
-  <button type="submit">🔮 ¥500で詳細鑑定を見る</button>
-</form>
-  <a href="/" class="back">← もう一度占う</a>
+    <button class="buy-button" type="submit">
+      🔐 500円でプレミアム鑑定を見る
+    </button>
+  </form>
 </body>
 </html>

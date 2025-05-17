@@ -3,17 +3,17 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, make_response
 import openai
 import stripe
 import os
-from flask import make_response
 from xhtml2pdf import pisa
 from io import BytesIO
 
 # Flaskアプリを初期化
 app = Flask(__name__)
-app.secret_key = os.environ["SECRET_KEY"] # 任意のキー
+app.secret_key = os.environ["SECRET_KEY"]
+
 # APIキーの設定
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
@@ -46,12 +46,10 @@ def result():
     birthdate = request.form["birthdate"]
     question = request.form["question"]
 
-    # セッションに保存しておく
     session["name"] = name
     session["birthdate"] = birthdate
     session["question"] = question
 
-    # 通常の簡易プロンプト
     prompt = generate_prompt(name, birthdate, question)
 
     response = openai.ChatCompletion.create(
@@ -75,11 +73,12 @@ def buy():
             "quantity": 1,
         }],
         mode="payment",
-        success_url=request.host_url + "premium_result",
-        cancel_url=request.host_url + "result",
+        success_url=request.host_url.rstrip("/") + "/premium_result",
+        cancel_url=request.host_url.rstrip("/") + "/result",
     )
     return redirect(checkout_session.url, code=303)
 
+# プレミアム鑑定結果の表示
 @app.route("/premium_result")
 def premium_result():
     name = session.get("name")
@@ -89,7 +88,6 @@ def premium_result():
     if not all([name, birthdate, question]):
         return redirect("/")
 
-    # 有料版のプロンプト（より詳細に）
     premium_prompt = f"""
 あなたはプロの占い師です。以下の情報に基づいて、相手に対して数秘術による総合鑑定を丁寧に伝えてください。
 
@@ -117,6 +115,7 @@ def premium_result():
     session["premium_result"] = premium_result
     return render_template("premium_result.html", result=premium_result)
 
+# PDFダウンロード
 @app.route("/download")
 def download_pdf():
     name = session.get("name")
@@ -138,7 +137,7 @@ def download_pdf():
     <div>{result_html}</div>
     """
 
-    pdf = BytesIO()  # ← この行のインデントに注意
+    pdf = BytesIO()
     pisa_status = pisa.CreatePDF(src=html, dest=pdf)
     pdf.seek(0)
 

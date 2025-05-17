@@ -128,14 +128,16 @@ def download_pdf():
         return redirect("/premium_result")
 
     # HTMLテンプレートを生成（最低限のデザイン）
-    html = f"""
-    <h2>プレミアム鑑定結果</h2>
-    <p><strong>名前:</strong> {name}</p>
-    <p><strong>誕生日:</strong> {birthdate}</p>
-    <p><strong>相談内容:</strong> {question}</p>
-    <hr>
-    <div>{result.replace('\n', '<br>')}</div>
-    """
+result_html = result.replace('\n', '<br>')
+
+html = f"""
+<h2>プレミアム鑑定結果</h2>
+<p><strong>名前:</strong> {name}</p>
+<p><strong>誕生日:</strong> {birthdate}</p>
+<p><strong>相談内容:</strong> {question}</p>
+<hr>
+<div>{result_html}</div>
+"""
 
     # PDF生成
     pdf = BytesIO()

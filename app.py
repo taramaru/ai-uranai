@@ -122,25 +122,23 @@ def download_pdf():
     name = session.get("name")
     birthdate = session.get("birthdate")
     question = session.get("question")
-    result = session.get("premium_result")  # resultもセッションに保存しておく
+    result = session.get("premium_result")
 
     if not result:
         return redirect("/premium_result")
 
-    # HTMLテンプレートを生成（最低限のデザイン）
-result_html = result.replace('\n', '<br>')
+    result_html = result.replace('\n', '<br>')
 
-html = f"""
-<h2>プレミアム鑑定結果</h2>
-<p><strong>名前:</strong> {name}</p>
-<p><strong>誕生日:</strong> {birthdate}</p>
-<p><strong>相談内容:</strong> {question}</p>
-<hr>
-<div>{result_html}</div>
-"""
+    html = f"""
+    <h2>プレミアム鑑定結果</h2>
+    <p><strong>名前:</strong> {name}</p>
+    <p><strong>誕生日:</strong> {birthdate}</p>
+    <p><strong>相談内容:</strong> {question}</p>
+    <hr>
+    <div>{result_html}</div>
+    """
 
-    # PDF生成
-    pdf = BytesIO()
+    pdf = BytesIO()  # ← この行のインデントに注意
     pisa_status = pisa.CreatePDF(src=html, dest=pdf)
     pdf.seek(0)
 

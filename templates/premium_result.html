@@ -56,6 +56,24 @@
         font-size: 0.95em;
       }
     }
+    .download-button {
+  display: block;
+  margin: 20px auto;
+  max-width: 300px;
+  background: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.download-button:hover {
+  background: #43A047;
+}
+
   </style>
 </head>
 <body>
@@ -64,6 +82,7 @@
   <div class="result-box">
     {{ result }}
   </div>
+  <a href="/download" class="download-button">📄 鑑定結果をPDFで保存</a>
 
   <a href="/" class="back-link">← トップに戻る</a>
 </body>

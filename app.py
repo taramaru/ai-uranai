@@ -7,6 +7,9 @@ from flask import Flask, render_template, request, redirect, session
 import openai
 import stripe
 import os
+from flask import make_response
+from xhtml2pdf import pisa
+from io import BytesIO
 
 # Flaskアプリを初期化
 app = Flask(__name__)
@@ -111,7 +114,38 @@ def premium_result():
     )
 
     premium_result = response.choices[0].message["content"]
+    session["premium_result"] = premium_result
     return render_template("premium_result.html", result=premium_result)
+
+@app.route("/download")
+def download_pdf():
+    name = session.get("name")
+    birthdate = session.get("birthdate")
+    question = session.get("question")
+    result = session.get("premium_result")  # resultもセッションに保存しておく
+
+    if not result:
+        return redirect("/premium_result")
+
+    # HTMLテンプレートを生成（最低限のデザイン）
+    html = f"""
+    <h2>プレミアム鑑定結果</h2>
+    <p><strong>名前:</strong> {name}</p>
+    <p><strong>誕生日:</strong> {birthdate}</p>
+    <p><strong>相談内容:</strong> {question}</p>
+    <hr>
+    <div>{result.replace('\n', '<br>')}</div>
+    """
+
+    # PDF生成
+    pdf = BytesIO()
+    pisa_status = pisa.CreatePDF(src=html, dest=pdf)
+    pdf.seek(0)
+
+    response = make_response(pdf.read())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename="uranai_result.pdf"'
+    return response
 
 # アプリ起動
 if __name__ == "__main__":
